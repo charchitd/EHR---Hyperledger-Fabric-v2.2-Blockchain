@@ -1,0 +1,167 @@
+# Copyright IBM Corp. All Rights Reserved.
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
+version: '2'
+
+networks:
+  byfn:
+
+
+services:
+  ca_hospital:
+    image: hyperledger/fabric-ca:$IMAGE_TAG
+    environment:
+      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
+      - FABRIC_CA_SERVER_CA_NAME=ca-hospital 
+      - FABRIC_CA_SERVER_TLS_ENABLED=true
+      - FABRIC_CA_SERVER_TLS_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.hospitals.ehr.com-cert.pem
+      - FABRIC_CA_SERVER_TLS_KEYFILE=/etc/hyperledger/fabric-ca-server-config/${BYFN_CA1_PRIVATE_KEY}
+      - FABRIC_CA_SERVER_PORT=7054
+    ports:
+      - "7054:7054"
+    command:  sh -c 'fabric-ca-server start -b admin:adminpw -d' 
+    
+    # command: sh -c 'fabric-ca-server start --ca.certfile /etc/hyperledger/fabric-ca-server-config/ca.hospitals.ehr.com-cert.pem --ca.keyfile /etc/hyperledger/fabric-ca-server-config/${BYFN_CA1_PRIVATE_KEY} -b admin:adminpw -d'
+    volumes:
+      - ../crypto-config/peerOrganizations/hospitals.ehr.com/ca/:/etc/hyperledger/fabric-ca-server-config
+    container_name: ca_peerHospitals
+    # container_name: ca_peerOrg1
+    networks:
+      - byfn
+
+  ca_patient:
+    image: hyperledger/fabric-ca:$IMAGE_TAG
+    environment:
+      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
+      - FABRIC_CA_SERVER_CA_NAME=ca-org2
+      - FABRIC_CA_SERVER_TLS_ENABLED=true
+      - FABRIC_CA_SERVER_TLS_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.patients.ehr.com-cert.pem
+      - FABRIC_CA_SERVER_TLS_KEYFILE=/etc/hyperledger/fabric-ca-server-config/${BYFN_CA2_PRIVATE_KEY}
+      - FABRIC_CA_SERVER_PORT=8054
+    ports:
+      - "8054:8054"
+    command:  sh -c 'fabric-ca-server start -b admin:adminpw -d' 
+    
+    # command: sh -c 'fabric-ca-server start --ca.certfile /etc/hyperledger/fabric-ca-server-config/ca.patients.ehr.com-cert.pem --ca.keyfile /etc/hyperledger/fabric-ca-server-config/${BYFN_CA2_PRIVATE_KEY} -b admin:adminpw -d'
+    volumes:
+      - ../crypto-config/peerOrganizations/patients.ehr.com/ca/:/etc/hyperledger/fabric-ca-server-config
+    container_name: ca_peerPatients
+    # container_name: ca_peerOrg2
+    networks:
+      - byfn
+
+
+  ca_orderer:
+    image: hyperledger/fabric-ca:$IMAGE_TAG
+    environment:
+      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
+      - FABRIC_CA_SERVER_CA_NAME=ca-orderer
+      - FABRIC_CA_SERVER_TLS_ENABLED=true
+      
+      - FABRIC_CA_SERVER_PORT=7052
+      - FABRIC_CA_SERVER_OPERATIONS_LISTENADDRESS=0.0.0.0:19054
+    ports:
+      - "7052:7052"
+      - "19054:19054"
+    # command: sh -c 'fabric-ca-server start --ca.certfile /etc/hyperledger/fabric-ca-server-config/ca.patients.ehr.com-cert.pem --ca.keyfile /etc/hyperledger/fabric-ca-server-config/${BYFN_CA2_PRIVATE_KEY} -b admin:adminpw -d'
+    command:  sh -c 'fabric-ca-server start -b admin:adminpw -d' 
+    
+    volumes:
+    
+      - ../crypto-config/ordererOrganizations/ehr.com/orderers/orderer.ehr.com/ca/:/etc/hyperledger/fabric-ca-server-config
+    container_name: ca_orderer
+    networks:
+      - byfn
+
+
+  ca_orderer2:
+    image: hyperledger/fabric-ca:$IMAGE_TAG
+    environment:
+      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
+      - FABRIC_CA_SERVER_CA_NAME=ca-orderer2
+      - FABRIC_CA_SERVER_TLS_ENABLED=true
+      
+      - FABRIC_CA_SERVER_PORT=8052
+      - FABRIC_CA_SERVER_OPERATIONS_LISTENADDRESS=0.0.0.0:21054
+    ports:
+      - "8052:8052"
+      - "21054:21054"
+    
+    command:  sh -c 'fabric-ca-server start -b admin:adminpw -d' 
+    
+    # command: sh -c 'fabric-ca-server start --ca.certfile /etc/hyperledger/fabric-ca-server-config/ca.patients.ehr.com-cert.pem --ca.keyfile /etc/hyperledger/fabric-ca-server-config/${BYFN_CA2_PRIVATE_KEY} -b admin:adminpw -d'
+    
+    volumes:
+      - ../crypto-config/ordererOrganizations/ehr.com/orderers/orderer2.ehr.com/ca/:/etc/hyperledger/fabric-ca-server-config
+    container_name: ca_orderer2
+    networks:
+      - byfn
+
+
+  ca_orderer3:
+    image: hyperledger/fabric-ca:$IMAGE_TAG
+    environment:
+      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
+      - FABRIC_CA_SERVER_CA_NAME=ca-orderer3
+      - FABRIC_CA_SERVER_TLS_ENABLED=true
+      
+      - FABRIC_CA_SERVER_PORT=9052
+      - FABRIC_CA_SERVER_OPERATIONS_LISTENADDRESS=0.0.0.0:22054
+    ports:
+      - "9052:9052"
+      - "22054:22054"
+    # command: sh -c 'fabric-ca-server start --ca.certfile /etc/hyperledger/fabric-ca-server-config/ca.patients.ehr.com-cert.pem --ca.keyfile /etc/hyperledger/fabric-ca-server-config/${BYFN_CA2_PRIVATE_KEY} -b admin:adminpw -d'
+    command:  sh -c 'fabric-ca-server start -b admin:adminpw -d' 
+    
+    volumes:
+      - ../crypto-config/ordererOrganizations/ehr.com/orderers/orderer3.ehr.com/ca/:/etc/hyperledger/fabric-ca-server-config
+    container_name: ca_orderer3
+    networks:
+      - byfn
+
+
+  ca_orderer4:
+    image: hyperledger/fabric-ca:$IMAGE_TAG
+    environment:
+      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
+      - FABRIC_CA_SERVER_CA_NAME=ca-orderer4
+      - FABRIC_CA_SERVER_TLS_ENABLED=true
+      
+      - FABRIC_CA_SERVER_PORT=10052
+      - FABRIC_CA_SERVER_OPERATIONS_LISTENADDRESS=0.0.0.0:23054
+    ports:
+      - "10052:10052"
+      - "23054:23054"
+    # command: sh -c 'fabric-ca-server start --ca.certfile /etc/hyperledger/fabric-ca-server-config/ca.patients.ehr.com-cert.pem --ca.keyfile /etc/hyperledger/fabric-ca-server-config/${BYFN_CA2_PRIVATE_KEY} -b admin:adminpw -d'
+    command:  sh -c 'fabric-ca-server start -b admin:adminpw -d' 
+    
+    volumes:
+      - ../crypto-config/ordererOrganizations/ehr.com/orderers/orderer4.ehr.com/ca/:/etc/hyperledger/fabric-ca-server-config
+    container_name: ca_orderer4
+    networks:
+      - byfn
+
+
+  ca_orderer5:
+    image: hyperledger/fabric-ca:$IMAGE_TAG
+    environment:
+      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
+      - FABRIC_CA_SERVER_CA_NAME=ca-orderer5
+      - FABRIC_CA_SERVER_TLS_ENABLED=true
+      
+      - FABRIC_CA_SERVER_PORT=11052
+      - FABRIC_CA_SERVER_OPERATIONS_LISTENADDRESS=0.0.0.0:24054
+    ports:
+      - "11052:11052"
+      - "24054:24054"
+    # command: sh -c 'fabric-ca-server start --ca.certfile /etc/hyperledger/fabric-ca-server-config/ca.patients.ehr.com-cert.pem --ca.keyfile /etc/hyperledger/fabric-ca-server-config/${BYFN_CA2_PRIVATE_KEY} -b admin:adminpw -d'
+    command:  sh -c 'fabric-ca-server start -b admin:adminpw -d' 
+    
+    volumes:
+      - ../crypto-config/ordererOrganizations/ehr.com/orderers/orderer5.ehr.com/ca/:/etc/hyperledger/fabric-ca-server-config
+    container_name: ca_orderer5
+    networks:
+      - byfn
+

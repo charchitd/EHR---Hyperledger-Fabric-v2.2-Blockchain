@@ -1,0 +1,74 @@
+this POC invloves 2 parties 
+ 1. Pateints
+ 2. Hospitals
+ 
+ In this project we are tracking patient treatment records
+ 
+ * Developers need to create hyperledger fabric network with two orgnisation and raft orderer consensus
+ * Devlop chaincode for following functions
+ -- 1 Create patient records
+ 	{
+ 	"ID":"123",
+ 	"name":"siyaram",
+ 	"bithDate":"12/09/1994"
+ 	"weight":"43kg",
+ 	"height":"145inch",
+ 	"approveStatus":"false"  // by default this one is false 
+ 	}
+ ---2 update patient record
+ 
+ ---3 read paiteint record	
+ 
+ ----4. create hospital record
+ 	{
+ 		"id":"001",
+ 		"name":"aditya hospital",
+ 		"address":"jodhpur,india",
+ 		"doctorsList":[
+		 	{
+		 	
+		 	name:"A.k. john",
+		 	department:"ICU",
+		 	},
+		 	{
+		 	name:"A.k. malhotra",
+		 	department:"dental",
+		 	}
+ 		]
+ 	}
+---5. update hospital record
+
+---6 .read hospital record
+
+--7 create patient treatment
+
+	{
+	"id":"TR-0001",
+	"name":"dental treatment",
+	"hospitalId":"002",
+	"patientId":"123",
+	"doctorname":"A.k. malhotra",
+	"status":"first-visited"
+	} 	
+ 	
+ --8 update treatment record according to following status 
+ 
+	 "status":"medicine-given"
+	 
+	 "status":"second-visit" 
+	 
+	 "status":"final-checkup"
+	 
+	  "status":"all-good"
+	 
+ --9 Patient will approve his personal details , so that hospital can able to see his detils 
+ 
+     {
+ 	"ID":"123",
+ 	"name":"siyaram",
+ 	"bithDate":"12/09/1994"
+ 	"weight":"43kg",
+ 	"height":"145inch",
+ 	"approveStatus":"true" 
+ 	}
+ 	

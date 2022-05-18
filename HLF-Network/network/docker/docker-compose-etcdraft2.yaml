@@ -1,0 +1,104 @@
+# Copyright IBM Corp. All Rights Reserved.
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
+version: '2'
+
+volumes:
+  orderer.ehr.com:
+  orderer2.ehr.com:
+  orderer3.ehr.com:
+  orderer4.ehr.com:
+  orderer5.ehr.com:
+
+networks:
+  byfn:
+
+services:
+
+  orderer.ehr.com:
+    extends:
+      file: ../base/peer-base.yaml
+      service: orderer-base
+    environment:
+      - ORDERER_GENERAL_LISTENPORT=7050
+    container_name: orderer.ehr.com
+    networks:
+      - byfn
+    volumes:
+      - ../channel-artifacts/genesis.block:/var/hyperledger/orderer/orderer.genesis.block
+      - ../crypto-config/ordererOrganizations/ehr.com/orderers/orderer.ehr.com/msp:/var/hyperledger/orderer/msp
+      - ../crypto-config/ordererOrganizations/ehr.com/orderers/orderer.ehr.com/tls/:/var/hyperledger/orderer/tls
+      - orderer.ehr.com:/var/hyperledger/production/orderer
+    ports:
+      - 7050:7050
+
+
+  orderer2.ehr.com:
+    extends:
+      file: ../base/peer-base.yaml
+      service: orderer-base
+    environment:
+      - ORDERER_GENERAL_LISTENPORT=8050
+    container_name: orderer2.ehr.com
+    networks:
+      - byfn
+    volumes:
+      - ../channel-artifacts/genesis.block:/var/hyperledger/orderer/orderer.genesis.block
+      - ../crypto-config/ordererOrganizations/ehr.com/orderers/orderer2.ehr.com/msp:/var/hyperledger/orderer/msp
+      - ../crypto-config/ordererOrganizations/ehr.com/orderers/orderer2.ehr.com/tls/:/var/hyperledger/orderer/tls
+      - orderer2.ehr.com:/var/hyperledger/production/orderer
+    ports:
+      - 8050:8050
+
+  orderer3.ehr.com:
+    extends:
+      file: ../base/peer-base.yaml
+      service: orderer-base
+    environment:
+      - ORDERER_GENERAL_LISTENPORT=9050
+    container_name: orderer3.ehr.com
+    networks:
+      - byfn
+    volumes:
+      - ../channel-artifacts/genesis.block:/var/hyperledger/orderer/orderer.genesis.block
+      - ../crypto-config/ordererOrganizations/ehr.com/orderers/orderer3.ehr.com/msp:/var/hyperledger/orderer/msp
+      - ../crypto-config/ordererOrganizations/ehr.com/orderers/orderer3.ehr.com/tls/:/var/hyperledger/orderer/tls
+      - orderer3.ehr.com:/var/hyperledger/production/orderer
+    ports:
+      - 9050:9050
+
+  orderer4.ehr.com:
+    extends:
+      file: ../base/peer-base.yaml
+      service: orderer-base
+    environment:
+      - ORDERER_GENERAL_LISTENPORT=10050
+    container_name: orderer4.ehr.com
+    networks:
+      - byfn
+    volumes:
+      - ../channel-artifacts/genesis.block:/var/hyperledger/orderer/orderer.genesis.block
+      - ../crypto-config/ordererOrganizations/ehr.com/orderers/orderer4.ehr.com/msp:/var/hyperledger/orderer/msp
+      - ../crypto-config/ordererOrganizations/ehr.com/orderers/orderer4.ehr.com/tls/:/var/hyperledger/orderer/tls
+      - orderer4.ehr.com:/var/hyperledger/production/orderer
+    ports:
+      - 10050:10050
+
+  orderer5.ehr.com:
+    extends:
+      file: ../base/peer-base.yaml
+      service: orderer-base
+    environment:
+      - ORDERER_GENERAL_LISTENPORT=11050
+    container_name: orderer5.ehr.com
+    networks:
+      - byfn
+    volumes:
+      - ../channel-artifacts/genesis.block:/var/hyperledger/orderer/orderer.genesis.block
+      - ../crypto-config/ordererOrganizations/ehr.com/orderers/orderer5.ehr.com/msp:/var/hyperledger/orderer/msp
+      - ../crypto-config/ordererOrganizations/ehr.com/orderers/orderer5.ehr.com/tls/:/var/hyperledger/orderer/tls
+      - orderer5.ehr.com:/var/hyperledger/production/orderer
+    ports:
+      - 11050:11050

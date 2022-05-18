@@ -1,0 +1,60 @@
+{
+    "name": "first-network-patients",
+    "version": "1.0.0",
+    "client": {
+        "organization": "Patients",
+        "connection": {
+            "timeout": {
+                "peer": {
+                    "endorser": "300"
+                }
+            }
+        }
+    },
+    "organizations": {
+        "Patients": {
+            "mspid": "Org2MSP",
+            "peers": [
+                "peer0.patients.ehr.com",
+                "peer1.patients.ehr.com"
+            ],
+            "certificateAuthorities": [
+                "ca.patients.ehr.com"
+            ]
+        }
+    },
+    "peers": {
+        "peer0.patients.ehr.com": {
+            "url": "grpcs://localhost:9051",
+            "tlsCACerts": {
+                "pem": ""
+            },
+            "grpcOptions": {
+                "ssl-target-name-override": "peer0.patients.ehr.com",
+                "hostnameOverride": "peer0.patients.ehr.com"
+            }
+        },
+        "peer1.patients.ehr.com": {
+            "url": "grpcs://localhost:10051",
+            "tlsCACerts": {
+                "pem": ""
+            },
+            "grpcOptions": {
+                "ssl-target-name-override": "peer1.patients.ehr.com",
+                "hostnameOverride": "peer1.patients.ehr.com"
+            }
+        }
+    },
+    "certificateAuthorities": {
+        "ca.patients.ehr.com": {
+            "url": "https://localhost:8054",
+            "caName": "ca-org2",
+            "tlsCACerts": {
+                "pem": ""
+            },
+            "httpOptions": {
+                "verify": false
+            }
+        }
+    }
+}

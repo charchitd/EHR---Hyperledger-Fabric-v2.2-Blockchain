@@ -1,0 +1,132 @@
+# Copyright IBM Corp. All Rights Reserved.
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
+version: '2'
+
+volumes:
+  orderer.ehr.com:
+  orderer2.ehr.com:
+  orderer3.ehr.com:
+  orderer4.ehr.com:
+  orderer5.ehr.com:
+  peer0.hospitals.ehr.com:
+  peer1.hospitals.ehr.com:
+  peer0.patients.ehr.com:
+  peer1.patients.ehr.com:
+
+networks:
+  byfn:
+
+services:
+
+  orderer.ehr.com:
+    extends:
+      file:   ../base/docker-compose-base.yaml
+      service: orderer.ehr.com
+    container_name: orderer.ehr.com
+    networks:
+      - byfn
+
+  orderer2.ehr.com:
+    extends:
+      file:   ../base/docker-compose-base.yaml
+      service: orderer2.ehr.com
+    container_name: orderer2.ehr.com
+    networks:
+      - byfn
+
+  orderer3.ehr.com:
+    extends:
+      file:   ../base/docker-compose-base.yaml
+      service: orderer3.ehr.com
+    container_name: orderer3.ehr.com
+    networks:
+      - byfn
+  
+  orderer4.ehr.com:
+    extends:
+      file:   ../base/docker-compose-base.yaml
+      service: orderer4.ehr.com
+    container_name: orderer4.ehr.com
+    networks:
+      - byfn
+  orderer5.ehr.com:
+    extends:
+      file:   ../base/docker-compose-base.yaml
+      service: orderer5.ehr.com
+    container_name: orderer5.ehr.com
+    networks:
+      - byfn
+
+  peer0.hospitals.ehr.com:
+    container_name: peer0.hospitals.ehr.com
+    extends:
+      file:  ../base/docker-compose-base.yaml
+      service: peer0.hospitals.ehr.com
+    networks:
+      - byfn
+
+  peer1.hospitals.ehr.com:
+    container_name: peer1.hospitals.ehr.com
+    extends:
+      file:  ../base/docker-compose-base.yaml
+      service: peer1.hospitals.ehr.com
+    networks:
+      - byfn
+
+  peer0.patients.ehr.com:
+    container_name: peer0.patients.ehr.com
+    extends:
+      file:  ../base/docker-compose-base.yaml
+      service: peer0.patients.ehr.com
+    networks:
+      - byfn
+
+  peer1.patients.ehr.com:
+    container_name: peer1.patients.ehr.com
+    extends:
+      file:  ../base/docker-compose-base.yaml
+      service: peer1.patients.ehr.com
+    networks:
+      - byfn
+
+  cli:
+    container_name: cli
+    image: hyperledger/fabric-tools:$IMAGE_TAG
+    tty: true
+    stdin_open: true
+    environment:
+      - GOPATH=/opt/gopath
+      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+      #- FABRIC_LOGGING_SPEC=DEBUG
+      - FABRIC_LOGGING_SPEC=INFO
+      - CORE_PEER_ID=cli
+      - CORE_PEER_ADDRESS=peer0.hospitals.ehr.com:7051
+      - CORE_PEER_LOCALMSPID=Org1MSP
+      - CORE_PEER_TLS_ENABLED=true
+      - CORE_PEER_TLS_CERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/hospitals.ehr.com/peers/peer0.hospitals.ehr.com/tls/server.crt
+      - CORE_PEER_TLS_KEY_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/hospitals.ehr.com/peers/peer0.hospitals.ehr.com/tls/server.key
+      - CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/hospitals.ehr.com/peers/peer0.hospitals.ehr.com/tls/ca.crt
+      - CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/hospitals.ehr.com/users/Admin@hospitals.ehr.com/msp
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
+    command: /bin/bash
+    volumes:
+        - /var/run/:/host/var/run/
+        - ../../chaincode/:/opt/gopath/src/github.com/hyperledger/fabric-samples/chaincode #change
+        - ../crypto-config:/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/
+        - ./scripts:/opt/gopath/src/github.com/hyperledger/fabric/peer/scripts/
+        - ../channel-artifacts:/opt/gopath/src/github.com/hyperledger/fabric/peer/channel-artifacts
+    depends_on:
+      - orderer.ehr.com
+      - orderer2.ehr.com
+      - orderer3.ehr.com
+      - orderer4.ehr.com
+      - orderer5.ehr.com
+      - peer0.hospitals.ehr.com
+      - peer1.hospitals.ehr.com
+      - peer0.patients.ehr.com
+      - peer1.patients.ehr.com
+    networks:
+      - byfn
